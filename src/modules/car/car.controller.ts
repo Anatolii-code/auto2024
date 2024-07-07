@@ -56,7 +56,7 @@ export class CarController {
     @CurrentUser() userData: IUserData,
     @UploadedFile() image: Express.Multer.File,
   ): Promise<void> {
-    await this.carService.uploadImage(userData, image);
+  //  await this.carService.uploadImage(userData, image);
   }
 
 

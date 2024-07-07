@@ -38,17 +38,17 @@ export class CarService {
     return CarMapper.toResponseDTO(car);
   }
 
-  public async uploadImage(
-    carData: ICarData,
-    image: Express.Multer.File,
-  ): Promise<void> {
-    const image = await this.fileStorageService.uploadFile(
-      image,
-      ContentType.IMAGE,
-      userData.userId,
-    );
-    await this.userRepository.update(userData.userId, { image });
-  }
+  // public async uploadImage(
+  //   carData: ICarData,
+  //   image: Express.Multer.File,
+  // ): Promise<void> {
+  //   const image = await this.fileStorageService.uploadFile(
+  //     image,
+  //     ContentType.IMAGE,
+  //     userData.userId,
+  //   );
+  //   await this.userRepository.update(userData.userId, { image });
+  // }
 
   public async getList(userData: IUserData, query: any): Promise<any> {
     const [entities, total] = await this.carRepository.getList(
