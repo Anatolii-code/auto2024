@@ -1,11 +1,11 @@
 import { Injectable } from '@nestjs/common';
 import { DataSource, Repository } from 'typeorm';
 
-import { LikeEntity } from '../../../database/entities/like.entity';
+import { ViewEntity } from '../../../database/entities/view.entity';
 
 @Injectable()
-export class LikeRepository extends Repository<LikeEntity> {
+export class ViewRepository extends Repository<ViewEntity> {
   constructor(private readonly dataSource: DataSource) {
-    super(LikeEntity, dataSource.manager);
+    super(ViewEntity, dataSource.manager);
   }
 }

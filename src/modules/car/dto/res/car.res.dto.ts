@@ -10,10 +10,35 @@ export class CarResDto {
   id: string;
 
   @ApiProperty({
-    example: 'Car Title',
-    description: 'Car Title',
+    example: 'Car brand',
+    description: 'Car brand',
   })
-  title: string;
+  brand: string;
+
+  @ApiProperty({
+    example: 'Car model',
+    description: 'Car model',
+  })
+  model: string;
+
+  @ApiProperty({
+    example: 'Car price',
+    description: 'Car price',
+  })
+  price: string;
+
+  @ApiProperty({
+    example: 'Car price valute',
+    description: 'Car price valute',
+  })
+  valute: string;
+
+  @ApiProperty({
+    example: 'Car locate',
+    description: 'Car locate',
+  })
+  locate: string;
+
 
   @ApiProperty({
     example: 'Car Description',
@@ -39,11 +64,11 @@ export class CarResDto {
   })
   updated: Date;
 
-  @ApiProperty({
-    example: ['tag1', 'tag2'],
-    description: 'Car Tags',
-  })
-  tags: string[];
+  // @ApiProperty({
+  //   example: ['16'],
+  //   description: 'Car views',
+  // })
+  // views?: string;
 
   user?: UserResDto;
 }

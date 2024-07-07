@@ -16,15 +16,15 @@ import {
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
 
-import { CurrentUser } from '../auth/decorators/current-user.decorator';
-import { SkipAuth } from '../auth/decorators/skip-auth.decorator';
+import { CurrentUser } from '../../common/decorators/current-user.decorator';
+import { SkipAuth } from '../../common/decorators/skip-auth.decorator';
 import { IUserData } from '../auth/interfaces/user-data.interface';
 import { UpdateUserReqDto } from './dto/req/update-user.req.dto';
 import { UserResDto } from './dto/res/user.res.dto';
 import { UserService } from './services/user.service';
 
 @ApiTags('Users')
-@Controller('users')
+@Controller()
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
@@ -32,27 +32,27 @@ export class UserController {
   @ApiForbiddenResponse({ description: 'Forbidden' })
   @ApiUnauthorizedResponse({ description: 'Unauthorized' })
   @ApiNotFoundResponse({ description: 'Not Found' })
-  @Get('me')
-  public async getMe(@CurrentUser() userData: IUserData): Promise<UserResDto> {
-    return await this.userService.getMe(userData);
+  @Get('profile')
+  public async getProfile(@CurrentUser() userData: IUserData): Promise<UserResDto> {
+    return await this.userService.getProfile(userData);
   }
 
   @ApiBearerAuth()
   @ApiForbiddenResponse({ description: 'Forbidden' })
   @ApiUnauthorizedResponse({ description: 'Unauthorized' })
   @ApiNotFoundResponse({ description: 'Not Found' })
-  @Put('me')
-  public async updateMe(
+  @Put('profile')
+  public async updateProfile(
     @CurrentUser() userData: IUserData,
     @Body() dto: UpdateUserReqDto,
   ): Promise<UserResDto> {
-    return await this.userService.updateMe(userData, dto);
+    return await this.userService.updateProfile(userData, dto);
   }
 
   @ApiBearerAuth()
   @ApiUnauthorizedResponse({ description: 'Unauthorized' })
   @ApiNotFoundResponse({ description: 'Not Found' })
-  @Delete('me')
+  @Delete('profile')
   public async remove(
     @CurrentUser() userData: IUserData,
     @Param('id', ParseUUIDPipe) userId: string,
@@ -62,28 +62,10 @@ export class UserController {
 
   @SkipAuth()
   @ApiNotFoundResponse({ description: 'Not Found' })
-  @Get(':userId')
+  @Get('profile/:userId')
   public async getById(
     @Param('userId', ParseUUIDPipe) userId: string,
   ): Promise<UserResDto> {
     return await this.userService.getById(userId);
-  }
-
-  @ApiBearerAuth()
-  @Post(':userId/follow')
-  public async follow(
-    @CurrentUser() userData: IUserData,
-    @Param('userId', ParseUUIDPipe) userId: string,
-  ): Promise<void> {
-    await this.userService.follow(userData, userId);
-  }
-
-  @ApiBearerAuth()
-  @Delete(':userId/follow')
-  public async unfollow(
-    @CurrentUser() userData: IUserData,
-    @Param('userId', ParseUUIDPipe) userId: string,
-  ): Promise<void> {
-    await this.userService.unfollow(userData, userId);
   }
 }

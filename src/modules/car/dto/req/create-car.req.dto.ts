@@ -3,8 +3,11 @@ import { PickType } from '@nestjs/swagger';
 import { BaseCarReqDto } from './base-car.req.dto';
 
 export class CreateCarReqDto extends PickType(BaseCarReqDto, [
-  'title',
+  'brand',
+  'model',
+  'price',
+  'valute',
+  'locate',
   'description',
   'body',
-  'tags',
 ]) {}

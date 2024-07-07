@@ -14,17 +14,12 @@ export class CarRepository extends Repository<CarEntity> {
     userData: IUserData,
     query: any,
   ): Promise<[CarEntity[], number]> {
-    const qb = this.createQueryBuilder('Car');
-    qb.leftJoinAndSelect('Car.tags', 'tag');
-    qb.leftJoinAndSelect('Car.user', 'user');
-    qb.leftJoinAndSelect(
-      'user.followings',
-      'follow',
-      'follow.follower_id = :myId',
-    );
+    const qb = this.createQueryBuilder('car');
+    qb.leftJoinAndSelect('car.user', 'user');
+
     qb.setParameter('myId', userData.userId);
 
-    qb.orderBy('Car.created', 'DESC');
+    qb.orderBy('car.created', 'DESC');
     qb.take(query.limit || 5);
     qb.skip(query.offset || 0);
 
@@ -33,19 +28,13 @@ export class CarRepository extends Repository<CarEntity> {
 
   public async findCarById(
     userData: IUserData,
-    CarId: string,
+    carId: string,
   ): Promise<CarEntity> {
-    const qb = this.createQueryBuilder('Car');
-    qb.leftJoinAndSelect('Car.tags', 'tag');
-    qb.leftJoinAndSelect('Car.user', 'user');
-    qb.leftJoinAndSelect(
-      'user.followings',
-      'follow',
-      'follow.follower_id = :myId',
-    );
+    const qb = this.createQueryBuilder('car');
+    qb.leftJoinAndSelect('car.user', 'user');
 
-    qb.where('Car.id = :CarId');
-    qb.setParameter('CarId', CarId);
+    qb.where('car.id = :carId');
+    qb.setParameter('carId', carId);
     qb.setParameter('myId', userData.userId);
 
     return await qb.getOne();

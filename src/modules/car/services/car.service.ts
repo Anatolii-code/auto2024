@@ -6,96 +6,113 @@ import {
 import { In } from 'typeorm';
 
 import { CarEntity } from '../../../database/entities/car.entity';
-import { TagEntity } from '../../../database/entities/tag.entity';
+import { ViewEntity } from '../../../database/entities/view.entity';
 import { IUserData } from '../../auth/interfaces/user-data.interface';
 import { LoggerService } from '../../logger/logger.service';
 import { CarRepository } from '../../repository/services/car.repository';
-import { TagRepository } from '../../repository/services/tag.repository';
 import { UserRepository } from '../../repository/services/user.repository';
 import { CreateCarReqDto } from '../dto/req/create-car.req.dto';
 import { UpdateCarReqDto } from '../dto/req/update-car.req.dto';
 import { CarResDto } from '../dto/res/car.res.dto';
 import { CarMapper } from './car.mapper';
+import { ICarData } from '../interfaces/car-data.interface';
 
 @Injectable()
 export class CarService {
   constructor(
     private readonly logger: LoggerService,
     private readonly userRepository: UserRepository,
-    private readonly CarRepository: CarRepository,
-    private readonly tagRepository: TagRepository,
+    private readonly carRepository: CarRepository,
   ) {}
-
-  public async getList(userData: IUserData, query: any): Promise<any> {
-    const [entities, total] = await this.CarRepository.getList(userData, query);
-    return { entities, total };
-  }
 
   public async create(
     userData: IUserData,
     dto: CreateCarReqDto,
   ): Promise<CarResDto> {
-    const tags = await this.createTags(dto.tags);
-    const Car = await this.CarRepository.save(
-      this.CarRepository.create({
+    const car = await this.carRepository.save(
+      this.carRepository.create({
         ...dto,
         user_id: userData.userId,
-        tags,
       }),
     );
-    return CarMapper.toResponseDTO(Car);
+    return CarMapper.toResponseDTO(car);
   }
 
-  private async createTags(tags: string[]): Promise<TagEntity[]> {
-    if (!tags || tags.length === 0) return [];
-
-    const entities = await this.tagRepository.findBy({ name: In(tags) });
-    const existingTags = new Set(entities.map((tag) => tag.name));
-    const newTags = tags.filter((tag) => !existingTags.has(tag));
-
-    const newEntities = await this.tagRepository.save(
-      newTags.map((name) => this.tagRepository.create({ name })),
+  public async uploadImage(
+    carData: ICarData,
+    image: Express.Multer.File,
+  ): Promise<void> {
+    const image = await this.fileStorageService.uploadFile(
+      image,
+      ContentType.IMAGE,
+      userData.userId,
     );
-    return [...entities, ...newEntities];
+    await this.userRepository.update(userData.userId, { image });
   }
 
-  public async getById(userData: IUserData, CarId: string): Promise<CarResDto> {
-    const Car = await this.CarRepository.findCarById(userData, CarId);
-    if (!Car) {
+  public async getList(userData: IUserData, query: any): Promise<any> {
+    const [entities, total] = await this.carRepository.getList(
+      userData,
+      query,
+    );
+    return { entities, total };
+  }
+
+  public async getById(
+    userData: IUserData,
+    carId: string,
+  ): Promise<CarResDto> {
+    const car = await this.carRepository.findCarById(
+      userData,
+      carId,
+    );
+    if (!car) {
       throw new NotFoundException('Car not found');
     }
-    return CarMapper.toResponseDTO(Car);
+    return CarMapper.toResponseDTO(car);
   }
 
   public async updateById(
     userData: IUserData,
-    CarId: string,
+    carId: string,
     dto: UpdateCarReqDto,
   ): Promise<CarResDto> {
-    const Car = await this.findMyCarByIdOrThrow(userData.userId, CarId);
-    await this.CarRepository.save({ ...Car, ...dto });
-    const updatedCar = await this.CarRepository.findCarById(userData, CarId);
+    const car = await this.findMyCarByIdOrThrow(
+      userData.userId,
+      carId,
+    );
+    await this.carRepository.save({ ...car, ...dto });
+    const updatedCar = await this.carRepository.findCarById(
+      userData,
+      carId,
+    );
     return CarMapper.toResponseDTO(updatedCar);
   }
 
-  public async deleteById(userData: IUserData, CarId: string): Promise<void> {
-    const Car = await this.findMyCarByIdOrThrow(userData.userId, CarId);
-    await this.CarRepository.remove(Car);
+  public async deleteById(
+    userData: IUserData,
+    carId: string,
+  ): Promise<void> {
+    const car = await this.findMyCarByIdOrThrow(
+      userData.userId,
+      carId,
+    );
+    await this.carRepository.remove(car);
   }
 
   public async findMyCarByIdOrThrow(
     userId: string,
-    CarId: string,
+    carId: string,
   ): Promise<CarEntity> {
-    const Car = await this.CarRepository.findOneBy({
-      id: CarId,
+    const car = await this.carRepository.findOneBy({
+      id: carId,
     });
-    if (!Car) {
+    if (!car) {
       throw new NotFoundException('Car not found');
     }
-    if (Car.user_id !== userId) {
+    if (car.user_id !== userId) {
       throw new ForbiddenException();
     }
-    return Car;
+    return car;
   }
 }

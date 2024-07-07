@@ -7,7 +7,7 @@ import { TransformHelper } from '../../../../common/helpers/transform.helper';
 export class BaseUserReqDto {
   @IsOptional()
   @IsString()
-  @Length(3, 50)
+  @Length(3, 40)
   @Transform(TransformHelper.trim)
   @Type(() => String)
   name?: string;
@@ -15,20 +15,20 @@ export class BaseUserReqDto {
   @IsOptional()
   @IsString()
   @Length(0, 300)
-  bio?: string;
+  type?: string;
 
   @IsOptional()
   @IsString()
-  @Length(0, 3000)
-  image?: string;
+  @Length(0, 10)
+  role?: string;
 
-  @ApiProperty({ example: 'test@gmail.com' })
+  @ApiProperty({ example: 'email1@gmail.com' })
   @IsString()
   @Length(0, 300)
   @Matches(/^[^\s@]+@([^\s@.,]+\.)+[^\s@.,]{2,}$/)
   email: string;
 
-  @ApiProperty({ example: '123qwe!@#QWE' })
+  @ApiProperty({ example: 'HardPassword123!!' })
   @IsString()
   @Length(0, 300)
   @Matches(/^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%_*#?&])[A-Za-z\d@$_!%*#?&]{8,}$/)

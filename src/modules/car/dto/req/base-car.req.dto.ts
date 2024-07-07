@@ -8,7 +8,31 @@ export class BaseCarReqDto {
   @Length(3, 50)
   @Transform(TransformHelper.trim)
   @Type(() => String)
-  title: string;
+  brand: string;
+
+  @IsString()
+  @Length(3, 50)
+  @Transform(TransformHelper.trim)
+  @Type(() => String)
+  model: string;
+
+  @IsString()
+  @Length(3, 50)
+  @Transform(TransformHelper.trim)
+  @Type(() => String)
+  price: string;
+
+  @IsString()
+  @Length(3, 10)
+  @Transform(TransformHelper.trim)
+  @Type(() => String)
+  valute: string;
+
+  @IsString()
+  @Length(3, 50)
+  @Transform(TransformHelper.trim)
+  @Type(() => String)
+  locate: string;
 
   @IsString()
   @Length(0, 300)
@@ -17,17 +41,9 @@ export class BaseCarReqDto {
   description: string;
 
   @IsString()
-  @Length(0, 3000)
+  @Length(0, 4000)
   @Transform(TransformHelper.trim)
   @Type(() => String)
   body: string;
 
-  @IsArray()
-  @IsString({ each: true })
-  @Length(3, 30, { each: true })
-  @ArrayMaxSize(5)
-  @Transform(TransformHelper.trimArray)
-  @Transform(TransformHelper.uniqueItems)
-  @Transform(TransformHelper.toLowerCaseArray)
-  tags: string[];
 }

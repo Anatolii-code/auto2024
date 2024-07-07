@@ -8,31 +8,27 @@ export class BaseUserResDto {
   id: string;
 
   @ApiProperty({
-    example: 'John Doe',
+    example: 'Sasuke Uchiha',
     description: 'The name of the User',
   })
   public readonly name: string;
 
   @ApiProperty({
-    example: 'test@.gmail.com',
+    example: 'email1@gmail.com',
     description: 'The email of the User',
   })
   public readonly email: string;
 
   @ApiProperty({
-    example: 'This is a bio',
-    description: 'The bio of the User',
+    example: 'premium',
+    description: 'The type of the User',
   })
-  public readonly bio?: string;
+  public readonly type?: string;
 
   @ApiProperty({
-    example: 'https://www.example.com/avatar.jpg',
-    description: 'The avatar of the User',
+    example: 'admin',
+    description: 'The role of user in platform',
   })
-  public readonly image?: string;
+  public readonly role?: string;
 
-  @ApiProperty({
-    description: 'The date the User was created',
-  })
-  public readonly isFollowed?: boolean;
 }

@@ -25,14 +25,15 @@ export type RedisConfig = {
   password: string;
 };
 
+export type SentryConfig = {
+  dsn: string;
+  debug: boolean;
+  env: string;
+};
+
 export type JWTConfig = {
   accessSecret: string;
   accessExpiresIn: number;
   refreshSecret: string;
   refreshExpiresIn: number;
-};
-export type SentryConfig = {
-  dsn: string;
-  debug: boolean;
-  env: string;
 };

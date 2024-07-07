@@ -6,12 +6,15 @@ export class CarMapper {
   public static toResponseDTO(entity: CarEntity): CarResDto {
     return {
       id: entity.id,
-      title: entity.title,
+      brand: entity.brand,
+      model: entity.model,
+      price: entity.price,
+      valute: entity.valute,
+      locate: entity.locate,
       description: entity.description,
       body: entity.body,
       created: entity.created,
       updated: entity.updated,
-      tags: entity.tags ? entity.tags.map((tag) => tag.name) : [],
       user: entity.user ? UserMapper.toResponseDTO(entity.user) : null,
     };
   }

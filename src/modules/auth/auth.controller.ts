@@ -1,8 +1,8 @@
 import { Body, Controller, Post, UseGuards } from '@nestjs/common';
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 
-import { CurrentUser } from './decorators/current-user.decorator';
-import { SkipAuth } from './decorators/skip-auth.decorator';
+import { CurrentUser } from '../../common/decorators/current-user.decorator';
+import { SkipAuth } from '../../common/decorators/skip-auth.decorator';
 import { SignInReqDto } from './dto/req/sign-in.req.dto';
 import { SignUpReqDto } from './dto/req/sign-up.req.dto';
 import { AuthResDto } from './dto/res/auth.res.dto';

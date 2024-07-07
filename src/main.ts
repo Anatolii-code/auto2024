@@ -13,8 +13,8 @@ async function bootstrap() {
   const appConfig = configService.get<AppConfig>('app');
 
   const config = new DocumentBuilder()
-    .setTitle('Auto-2024')
-    .setDescription('Documentacion of project Auto-2024')
+    .setTitle('Cats example')
+    .setDescription('The cats API description')
     .setVersion('1.0.0')
     .addBearerAuth({
       type: 'http',
