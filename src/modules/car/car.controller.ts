@@ -11,7 +11,7 @@ import {
   Query, UploadedFile, UseInterceptors, UsePipes, ValidationPipe,
 } from '@nestjs/common';
 import {
-  ApiBearerAuth, ApiConsumes,
+  ApiConsumes,
   ApiForbiddenResponse,
   ApiNotFoundResponse,
   ApiTags,
@@ -26,9 +26,12 @@ import { CarResDto } from './dto/res/car.res.dto';
 import { CarService } from './services/car.service';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { ApiFile } from '../../common/decorators/api-file.decorator';
+import { ICarData } from './interfaces/car-data.interface';
+import { SKIP_AUTH } from '../auth/constants/constants';
 
 @ApiTags('Cars')
 @Controller('cars')
+
 export class CarController {
   constructor(private readonly carService: CarService) {}
 
@@ -52,14 +55,21 @@ export class CarController {
   @ApiConsumes('multipart/form-data')
   @ApiFile('image', false)
   @Post('car/image')
-  public async uploadAvatar(
-    @CurrentUser() userData: IUserData,
+  public async uploadImage(
+    carData: ICarData,
     @UploadedFile() image: Express.Multer.File,
   ): Promise<void> {
-  //  await this.carService.uploadImage(userData, image);
+   await this.carService.uploadImage(carData, image);
   }
 
-
+  @ApiUnauthorizedResponse({ description: 'Unauthorized' })
+  @ApiNotFoundResponse({ description: 'Not Found' })
+  @Delete('car/image')
+  public async deleteImage(
+    carData: ICarData,
+  ): Promise<void> {
+    await this.carService.deleteImage(carData);
+  }
 
   @ApiForbiddenResponse({ description: 'Forbidden' })
   @ApiUnauthorizedResponse({ description: 'Unauthorized' })

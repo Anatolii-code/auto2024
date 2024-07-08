@@ -34,6 +34,10 @@ export class CarEntity extends BaseModel {
   @Column('text')
   body: string;
 
+  @Column('text', {nullable:true})
+  file?: string;
+
+
   @Column()
   user_id: string;
   @ManyToOne(() => UserEntity, (entity) => entity.cars)

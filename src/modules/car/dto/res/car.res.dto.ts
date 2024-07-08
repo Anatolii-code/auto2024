@@ -64,6 +64,12 @@ export class CarResDto {
   })
   updated: Date;
 
+  @ApiProperty({
+    example: 'Car image',
+    description: 'Car image',
+  })
+  file?: string;
+
   // @ApiProperty({
   //   example: ['16'],
   //   description: 'Car views',

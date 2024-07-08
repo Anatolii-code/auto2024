@@ -11,6 +11,7 @@ import { PostgresModule } from './modules/postgres/postgres.module';
 import { RedisModule } from './modules/redis/redis.module';
 import { RepositoryModule } from './modules/repository/repository.module';
 import { UserModule } from './modules/user/user.module';
+import { FileStorageService } from './modules/file-storage/services/file-storage.service';
 
 @Module({
   imports: [

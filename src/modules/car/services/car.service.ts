@@ -3,10 +3,10 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-import { In } from 'typeorm';
+//import { In } from 'typeorm';
 
 import { CarEntity } from '../../../database/entities/car.entity';
-import { ViewEntity } from '../../../database/entities/view.entity';
+//import { ViewEntity } from '../../../database/entities/view.entity';
 import { IUserData } from '../../auth/interfaces/user-data.interface';
 import { LoggerService } from '../../logger/logger.service';
 import { CarRepository } from '../../repository/services/car.repository';
@@ -16,6 +16,9 @@ import { UpdateCarReqDto } from '../dto/req/update-car.req.dto';
 import { CarResDto } from '../dto/res/car.res.dto';
 import { CarMapper } from './car.mapper';
 import { ICarData } from '../interfaces/car-data.interface';
+import { ContentType } from '../../file-storage/models/enums/content-type.enum';
+import { FileStorageService } from '../../file-storage/services/file-storage.service';
+//import { ICarData } from '../interfaces/car-data.interface';
 
 @Injectable()
 export class CarService {
@@ -23,6 +26,7 @@ export class CarService {
     private readonly logger: LoggerService,
     private readonly userRepository: UserRepository,
     private readonly carRepository: CarRepository,
+    private readonly fileStorageService: FileStorageService,
   ) {}
 
   public async create(
@@ -38,17 +42,21 @@ export class CarService {
     return CarMapper.toResponseDTO(car);
   }
 
-  // public async uploadImage(
-  //   carData: ICarData,
-  //   image: Express.Multer.File,
-  // ): Promise<void> {
-  //   const image = await this.fileStorageService.uploadFile(
-  //     image,
-  //     ContentType.IMAGE,
-  //     userData.userId,
-  //   );
-  //   await this.userRepository.update(userData.userId, { image });
-  // }
+  public async uploadImage(
+    carData: ICarData,
+    image: Express.Multer.File,
+  ): Promise<void> {
+    const file = await this.fileStorageService.uploadFile(
+      image,
+      ContentType.IMAGE,
+      carData.carId,
+    );
+    await this.carRepository.update(carData.carId, { file });
+  }
+
+
+  public async deleteImage(carData: ICarData):Promise<void>{}
+
 
   public async getList(userData: IUserData, query: any): Promise<any> {
     const [entities, total] = await this.carRepository.getList(

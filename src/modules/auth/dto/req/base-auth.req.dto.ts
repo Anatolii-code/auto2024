@@ -12,5 +12,5 @@ export class BaseAuthReqDto extends PickType(BaseUserReqDto, [
 ]) {
   @IsNotEmpty()
   @IsString()
-  readonly deviceId: string;
+  deviceId: string;
 }

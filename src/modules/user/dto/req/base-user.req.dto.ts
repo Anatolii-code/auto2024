@@ -6,21 +6,20 @@ import { TransformHelper } from '../../../../common/helpers/transform.helper';
 
 export class BaseUserReqDto {
   @IsOptional()
+
+  @ApiProperty({ example: 'Alan' })
   @IsString()
   @Length(3, 40)
   @Transform(TransformHelper.trim)
   @Type(() => String)
   name?: string;
 
-  @IsOptional()
-  @IsString()
-  @Length(0, 300)
-  type?: string;
+  @ApiProperty({ enum: ['base', 'premium', 'banned']})
+  type: string;
 
-  @IsOptional()
-  @IsString()
-  @Length(0, 10)
-  role?: string;
+  @ApiProperty({ enum: ['Admin', 'Moderator', 'User']})
+  role: UserRole;
+
 
   @ApiProperty({ example: 'email1@gmail.com' })
   @IsString()
@@ -33,4 +32,13 @@ export class BaseUserReqDto {
   @Length(0, 300)
   @Matches(/^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%_*#?&])[A-Za-z\d@$_!%*#?&]{8,}$/)
   password: string;
+
+  @ApiProperty({ example: 'string' })
+  @IsString()
+  deviceId: string;
+}
+export enum UserRole {
+  Admin = 'Admin',
+  Moderator = 'Moderator',
+  User = 'User',
 }
